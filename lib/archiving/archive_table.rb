@@ -21,16 +21,32 @@ module Archiving
         @archive_model
       end
 
-      def with_archive(query)
+      def with_archive(query_or_options={}, options={})
+        if query_or_options.is_a?(Hash)
+          options = query_or_options
+        else
+          query = query_or_options
+        end
+
         attrs = attribute_names.sort.join(", ")
 
         active = select("#{attrs}, 'active' as archive_table_type")
-        active = query.call(active)
+        active = query.call(active) if query
 
         archived = archive.select("#{attrs}, 'archived' as archive_table_type")
-        archived = query.call(archived)
+        archived = query.call(archived) if query
 
         sql = "(#{active.to_sql}) UNION (#{archived.to_sql})"
+
+        if options[:order]
+          sql += sanitize_sql([" ORDER BY %s", options[:order]])
+        end
+        if options[:limit]
+          sql += sanitize_sql([" LIMIT %s", options[:limit]])
+        end
+        if options[:offset]
+          sql += sanitize_sql([" OFFSET %s", options[:offset]])
+        end
 
         find_active_and_archived_by_sql(sql)
       end

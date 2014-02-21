@@ -30,12 +30,10 @@ module Archiving
           query = query_or_options
         end
 
-        attrs = attribute_names.sort.join(", ")
-
-        active = select("#{attrs}, 'active' as archive_table_type")
+        active = archive_select(self, "active")
         active = query.call(active) if query
 
-        archived = archive.select("#{attrs}, 'archived' as archive_table_type")
+        archived = archive_select(archive, "archived")
         archived = query.call(archived) if query
 
         sql = "(#{active.to_sql}) UNION (#{archived.to_sql})"
@@ -54,6 +52,18 @@ module Archiving
       end
 
       private
+      def archive_select(model, archive_table_type)
+        quoted_table = ActiveRecord::Base.connection.quote_table_name(model.table_name)
+        quoted_type = ActiveRecord::Base.connection.quote(archive_table_type)
+
+        attrs = attribute_names.map {|n|
+          quoted_attr = ActiveRecord::Base.connection.quote_column_name(n)
+          "#{quoted_table}.#{quoted_attr}"
+        }
+
+        active = model.select("#{attrs.join(", ")}, #{quoted_type} as archive_table_type")
+      end
+
       def find_active_and_archived_by_sql(sql)
         logging_query_plan do
           result = connection.select_all(send(:sanitize_sql, sql), "#{name} Union Load")   

@@ -89,4 +89,30 @@ class ArchiveTableTest < ActiveSupport::TestCase
 
     assert_equal [a2, a1], set
   end
+
+  test "new archive records can be persisted" do
+    assert_nothing_raised do
+      Post::Archive.create!
+    end
+  end
+
+  test "existing archive records are read only" do
+    archive = Post::Archive.create!
+    archive = Post::Archive.find(archive.id)
+
+    assert_raises(ActiveRecord::ReadOnlyRecord) do
+      archive.update_attribute(:title, "New post")
+    end
+  end
+
+  test "existing archive records fetched with with_archive are read only" do
+    Post::Archive.create!
+
+    archive = Post.with_archive.first
+
+    assert_raises(ActiveRecord::ReadOnlyRecord) do
+      archive.title = "New post"
+      archive.save!
+    end
+  end
 end

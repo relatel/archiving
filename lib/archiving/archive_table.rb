@@ -5,7 +5,6 @@ module Archiving
     extend ActiveSupport::Concern
 
     included do
-
     end
 
     module ClassMethods
@@ -14,6 +13,9 @@ module Archiving
       def has_archive_table
         model = Object.const_get(name)
         @archive_model = model.const_set("Archive", Class.new(model))
+        @archive_model.after_initialize do |record|
+          record.readonly! unless record.new_record?
+        end
         @archive_model.table_name = "#{table_name}_archive"
       end
 

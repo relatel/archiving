@@ -7,11 +7,11 @@ require "archiving/version"
 Gem::Specification.new do |s|
   s.name        = "archiving"
   s.version     = Archiving::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of Archiving."
-  s.description = "TODO: Description of Archiving."
+  s.authors     = ["Harry Vangberg"]
+  s.email       = ["hv@firmafon.dk"]
+  s.homepage    = "https://github.com/firmafon/archiving"
+  s.summary     = "MySQL Archive Tables"
+  s.description = "Archiving things"
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]

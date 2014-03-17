@@ -59,7 +59,7 @@ module Archiving
         end
       end
 
-      def archive_associations=(assocs)
+      def has_archive_associations(assocs)
         @archive_associations = assocs
       end
 
@@ -104,11 +104,11 @@ module Archiving
         archived_instance.save(validate: false)
         self.class.archive_associations.each do |assoc_name|
           assoc = send(assoc_name)
-          if assoc && assoc.respond_to(:archive!)
+          if assoc && assoc.respond_to?(:archive!)
             assoc.archive!
           elsif assoc.is_a?(Array) || assoc.is_a?(ActiveRecord::Relation)
             assoc.each do |a|
-              a.archive! if a.respond_to(:archive!)
+              a.archive! if a.respond_to?(:archive!)
             end
           end
         end

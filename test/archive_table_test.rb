@@ -142,4 +142,22 @@ class ArchiveTableTest < ActiveSupport::TestCase
     assert Post::Archive.find_by_id p1.id
   end
 
+  test "archiving associations" do
+    p1 = Post.create!(title: "Post 1", tag: "news")
+    l1 = LogDay.create!(day: Date.today, post: p1)
+    l1.log_lines.create!(descr: "hallo")
+    l1.log_lines.create!(descr: "hurra")
+    assert_equal 2, l1.log_lines.count
+
+    l1.archive!
+    assert_nil LogDay.find_by_id l1.id
+    assert LogDay.archive.find_by_id l1.id
+    assert_nil Post.find_by_id p1.id
+    assert Post.archive.find_by_id p1.id
+    l1.log_lines.each do |l|
+      assert_nil LogLine.find_by_id l.id
+      assert LogLine.archive.find_by_id l.id
+    end
+  end
+
 end

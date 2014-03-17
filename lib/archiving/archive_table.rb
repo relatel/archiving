@@ -51,6 +51,22 @@ module Archiving
         find_active_and_archived_by_sql(sql)
       end
 
+      def archive_aged_rows(aged_where_sql)
+        if archive # not on archive class
+          where(aged_where_sql).find_each do |instance|
+            instance.archive!
+          end
+        end
+      end
+
+      def archive_associations=(assocs)
+        @archive_associations = assocs
+      end
+
+      def archive_associations
+        @archive_associations ||= []
+      end
+
       private
       def archive_select(model, archive_table_type)
         quoted_table = ActiveRecord::Base.connection.quote_table_name(model.table_name)
@@ -78,6 +94,28 @@ module Archiving
         end 
       end
     end
+
+    def archive!
+      transaction do
+        archived_instance = self.class.archive.new
+        attributes.each do |name, value|
+          archived_instance.send("#{name}=", value)
+        end
+        archived_instance.save(validate: false)
+        self.class.archive_associations.each do |assoc_name|
+          assoc = send(assoc_name)
+          if assoc && assoc.respond_to(:archive!)
+            assoc.archive!
+          elsif assoc.is_a?(Array) || assoc.is_a?(ActiveRecord::Relation)
+            assoc.each do |a|
+              a.archive! if a.respond_to(:archive!)
+            end
+          end
+        end
+        delete
+      end
+    end
+
   end
 end
 

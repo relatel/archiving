@@ -115,4 +115,31 @@ class ArchiveTableTest < ActiveSupport::TestCase
       archive.save!
     end
   end
+
+  test "archiving aged records" do
+    p1 = Post.create!(title: "Post 1", tag: "news")
+    p2 = Post.create!(title: "Post 2", tag: "misc")
+
+    assert_difference "Post.count", -1 do
+      assert_difference "Post::Archive.count", 1 do
+        Post.archive_aged_rows("tag = 'news'")
+      end
+    end
+    assert_nil Post.find_by_id p1.id
+    assert Post::Archive.find_by_id p1.id
+    assert Post.find_by_id p2.id
+    assert_nil Post::Archive.find_by_id p2.id
+  end
+
+  test "archiving a specific record" do
+    p1 = Post.create!(title: "Post 1", tag: "news")
+    assert_difference "Post.count", -1 do
+      assert_difference "Post::Archive.count", 1 do
+        p1.archive!
+      end
+    end
+    assert_nil Post.find_by_id p1.id
+    assert Post::Archive.find_by_id p1.id
+  end
+
 end

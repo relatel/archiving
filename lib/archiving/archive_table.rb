@@ -104,10 +104,11 @@ module Archiving
     def archive!
       transaction do
         archived_instance = self.class.archive.new
-        attributes.each do |name, value|
-          archived_instance.send("#{name}=", value)
+        attributes.keys.each do |name|
+          archived_instance.send(:write_attribute, name, read_attribute(name))
         end
-        archived_instance.save(validate: false)
+        raise "Unarchivable attributes" if archived_instance.attributes != attributes
+        archived_instance.save!(validate: false)
         self.class.archive_associations.each do |assoc_name|
           assoc = send(assoc_name)
           if assoc && assoc.respond_to?(:archive!)

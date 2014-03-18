@@ -51,10 +51,15 @@ module Archiving
         find_active_and_archived_by_sql(sql)
       end
 
-      def archive_aged_rows(aged_where_sql)
+      def archive_aged_records(aged_where_sql = ["created_at < ?", 6.months.ago], order_sql = "id ASC", batch_size = 100)
         if archive # not on archive class
-          where(aged_where_sql).find_each do |instance|
-            instance.archive!
+          records = where(aged_where_sql).order(order_sql).limit(batch_size)
+          if records.any?
+            transaction do
+              records.each do |instance|
+                instance.archive!
+              end
+            end
           end
         end
       end

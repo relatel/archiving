@@ -53,8 +53,9 @@ module Archiving
 
       def archive_aged_records(aged_where_sql = ["created_at < ?", 6.months.ago], order_sql = "id ASC", batch_size = 100)
         if archive # not on archive class
-          records = where(aged_where_sql).order(order_sql).limit(batch_size)
-          if records.any?
+          records = nil
+          while records.nil? || records.any?
+            records = where(aged_where_sql).order(order_sql).limit(batch_size)
             transaction do
               records.each do |instance|
                 instance.archive!

@@ -105,7 +105,7 @@ module Archiving
       transaction do
         archived_instance = self.class.archive.new
         attributes.keys.each do |name|
-          archived_instance.send(:write_attribute, name, read_attribute(name))
+          archived_instance[name] = read_attribute(name)
         end
         raise "Unarchivable attributes" if archived_instance.attributes != attributes
         archived_instance.save!(validate: false)

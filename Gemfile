@@ -15,3 +15,8 @@ gem "jquery-rails"
 
 # To use debugger
 # gem 'debugger'
+
+group :development, :test do
+  gem "pry", "0.9.10"
+  gem "pry-nav", "0.2.2"
+end

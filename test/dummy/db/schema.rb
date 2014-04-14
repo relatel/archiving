@@ -11,16 +11,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140317201702) do
+ActiveRecord::Schema.define(:version => 20140414124125) do
 
   create_table "log_days", :force => true do |t|
     t.integer "post_id"
     t.date    "day"
+    t.string  "postable_type"
+    t.integer "postable_id"
   end
 
   create_table "log_days_archive", :force => true do |t|
     t.integer "post_id"
     t.date    "day"
+    t.string  "postable_type"
+    t.integer "postable_id"
   end
 
   create_table "log_lines", :force => true do |t|

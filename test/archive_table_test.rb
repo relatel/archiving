@@ -115,4 +115,69 @@ class ArchiveTableTest < ActiveSupport::TestCase
       archive.save!
     end
   end
+
+  test "archiving aged records" do
+    p1 = Post.create!(title: "Post 1", tag: "news")
+    p2 = Post.create!(title: "Post 2", tag: "misc")
+
+    assert_difference "Post.count", -1 do
+      assert_difference "Post::Archive.count", 1 do
+        Post.archive_aged_records("tag = 'news'")
+      end
+    end
+    assert_nil Post.find_by_id p1.id
+    assert Post::Archive.find_by_id p1.id
+    assert Post.find_by_id p2.id
+    assert_nil Post::Archive.find_by_id p2.id
+  end
+
+  test "archiving a specific record" do
+    p1 = Post.create!(title: "Post 1", tag: "news")
+    assert_difference "Post.count", -1 do
+      assert_difference "Post::Archive.count", 1 do
+        p1.archive!
+      end
+    end
+    assert_nil Post.find_by_id p1.id
+    assert Post::Archive.find_by_id p1.id
+  end
+
+  test "archiving associations" do
+    p1 = Post.create!(title: "Post 1", tag: "news")
+    l1 = LogDay.create!(day: Date.today, post: p1)
+    l1.log_lines.create!(descr: "hallo")
+    l1.log_lines.create!(descr: "hurra")
+    assert_equal 2, l1.log_lines.count
+
+    l1.archive!
+    assert_nil LogDay.find_by_id l1.id
+    assert LogDay.archive.find_by_id l1.id
+    assert_nil Post.find_by_id p1.id
+    assert Post.archive.find_by_id p1.id
+    l1.log_lines.each do |l|
+      assert_nil LogLine.find_by_id l.id
+      assert LogLine.archive.find_by_id l.id
+    end
+  end
+
+  test "archiving polymorphic associations" do
+    p1 = Post.create!(title: "Post 1", tag: "news")
+    l1 = LogDay.create!(day: Date.today, postable: p1)
+    assert_nil l1.post
+    assert_equal p1, l1.postable
+    l1.log_lines.create!(descr: "hallo")
+    l1.log_lines.create!(descr: "hurra")
+    assert_equal 2, l1.log_lines.count
+
+    l1.archive!
+    assert_nil LogDay.find_by_id l1.id
+    assert LogDay.archive.find_by_id l1.id
+    assert_nil Post.find_by_id p1.id
+    assert Post.archive.find_by_id p1.id
+    l1.log_lines.each do |l|
+      assert_nil LogLine.find_by_id l.id
+      assert LogLine.archive.find_by_id l.id
+    end
+  end
+
 end

@@ -1,4 +1,5 @@
 require "active_support/concern"
+require "active_support/inflector"
 
 module Archiving
   module ArchiveTable
@@ -11,7 +12,7 @@ module Archiving
       attr_accessor :archive_table
 
       def has_archive_table
-        model = Object.const_get(name)
+        model = name.constantize
         @archive_model = model.const_set("Archive", Class.new(model))
         @archive_model.after_initialize do |record|
           record.readonly! unless record.new_record?

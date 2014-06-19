@@ -6,7 +6,7 @@ class ArchiveTableTest < ActiveSupport::TestCase
     Post::Archive.delete_all
   end
 
-  test "creates_archive_model" do
+  test "creates archive model" do
     assert Post::Archive < Post
   end
 

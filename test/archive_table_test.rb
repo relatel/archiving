@@ -131,6 +131,18 @@ class ArchiveTableTest < ActiveSupport::TestCase
     assert_nil Post::Archive.find_by_id p2.id
   end
 
+  test "archiving aged records with before callback" do
+    p1 = Post.create!(title: "Post 1", tag: "news")
+    p2 = Post.create!(title: "Post 2", tag: "misc")
+    before_called = false
+
+    Post.archive_aged_records(where: "tag = 'news'", before_callback: lambda {
+      before_called = true
+    })
+
+    assert_equal true, before_called
+  end
+
   test "archiving a specific record" do
     p1 = Post.create!(title: "Post 1", tag: "news")
     assert_difference "Post.count", -1 do

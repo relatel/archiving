@@ -62,6 +62,10 @@ module Archiving
         if archive # not on archive class
           records = nil
           while records.nil? || records.any?
+            if options[:before_callback]
+              options[:before_callback].call
+            end
+
             records = where(options[:where]).order(options[:order]).limit(options[:batch_size])
             transaction do
               records.each do |instance|

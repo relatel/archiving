@@ -122,7 +122,7 @@ class ArchiveTableTest < ActiveSupport::TestCase
 
     assert_difference "Post.count", -1 do
       assert_difference "Post::Archive.count", 1 do
-        Post.archive_aged_records("tag = 'news'")
+        Post.archive_aged_records(where: "tag = 'news'")
       end
     end
     assert_nil Post.find_by_id p1.id

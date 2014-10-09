@@ -9,7 +9,7 @@ module Archiving
         active_table = quote_table_name(table)
         archive_table = quote_table_name("#{table}_archive")
 
-        create_sql = "CREATE TABLE #{archive_table} LIKE #{active_table}"
+        create_sql = "CREATE TABLE IF NOT EXISTS #{archive_table} LIKE #{active_table}"
 
         execute(create_sql)
       end

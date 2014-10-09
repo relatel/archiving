@@ -41,4 +41,10 @@ class MigrationTest < ActiveSupport::TestCase
 
     assert_equal Comment.attribute_names, Comment.archive.attribute_names
   end
+
+  test "ignore existing archive table" do
+    CreateComments.new.up
+    CreateComments.new.create_archive_table :comments # we can re-run archive table creator without errors
+  end
+
 end

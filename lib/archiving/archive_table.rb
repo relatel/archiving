@@ -5,9 +5,6 @@ module Archiving
   module ArchiveTable
     extend ActiveSupport::Concern
 
-    included do
-    end
-
     module ClassMethods
       attr_accessor :archive_table
 
@@ -24,117 +21,89 @@ module Archiving
         @archive_model
       end
 
-      def with_archive(query_or_options={}, options={})
-        if query_or_options.is_a?(Hash)
-          options = query_or_options
-        else
-          query = query_or_options
-        end
-
-        active = archive_select(self, "active")
+      def with_archive(query = nil, order: nil, limit: nil, offset: nil)
+        active = select_archive_attributes_for(self, archive_table_type: "active")
         active = query.call(active) if query
 
-        archived = archive_select(archive, "archived")
+        archived = select_archive_attributes_for(archive, archive_table_type: "archived")
         archived = query.call(archived) if query
 
         sql = "(#{active.to_sql}) UNION (#{archived.to_sql})"
 
-        if options[:order]
-          sql += sanitize_sql([" ORDER BY %s", options[:order]])
+        if order
+          sql << sanitize_sql([" ORDER BY %s", order])
         end
-        if options[:limit]
-          sql += sanitize_sql([" LIMIT %s", options[:limit]])
+        if limit
+          sql << sanitize_sql([" LIMIT %s", limit])
         end
-        if options[:offset]
-          sql += sanitize_sql([" OFFSET %s", options[:offset]])
+        if offset
+          sql << sanitize_sql([" OFFSET %s", offset])
         end
 
         find_active_and_archived_by_sql(sql)
       end
 
-      def archive_aged_records(options={})
-        options = {
-          where: ["created_at < ?", 6.months.ago],
-          order: "id ASC",
-          batch_size: 100
-        }.merge(options)
+      def archive_aged_records(where: ['created_at < ?', 6.months.ago], order: :id, batch_size: 100, before_callback: nil)
+        return unless archive
 
-        if archive # not on archive class
-          records = nil
-          while records.nil? || records.any?
-            if options[:before_callback]
-              options[:before_callback].call
-            end
+        records = nil
+        while records.nil? || records.any?
+          before_callback.call if before_callback
 
-            records = where(options[:where]).order(options[:order]).limit(options[:batch_size])
-            transaction do
-              records.each do |instance|
-                instance.archive!
-              end
-            end
+          records = self.where(where).order(order).limit(batch_size)
+          transaction do
+            records.each(&:archive!)
           end
         end
       end
 
-      def has_archive_associations(assocs)
-        @archive_associations = assocs
-      end
+      attr_reader :archive_associations
 
-      def archive_associations
-        @archive_associations ||= []
+      def has_archive_associations(associations)
+        @archive_associations = associations
       end
 
       private
-      def archive_select(model, archive_table_type)
-        quoted_table = ActiveRecord::Base.connection.quote_table_name(model.table_name)
-        quoted_type = ActiveRecord::Base.connection.quote(archive_table_type)
+        def select_archive_attributes_for(relation, archive_table_type:)
+          quoted_type = connection.quote(archive_table_type)
 
-        attrs = attribute_names.map {|n|
-          quoted_attr = ActiveRecord::Base.connection.quote_column_name(n)
-          "#{quoted_table}.#{quoted_attr}"
-        }
+          relation.select(attribute_names).select("#{quoted_type} as archive_table_type")
+        end
 
-        active = model.select("#{attrs.join(", ")}, #{quoted_type} as archive_table_type")
-      end
-
-      def find_active_and_archived_by_sql(sql)
-        logging_query_plan do
-          result = connection.select_all(send(:sanitize_sql, sql), "#{name} Union Load")   
-          result.map {|record|
-            case record["archive_table_type"]
-            when "active"
-              instantiate(record)
-            when "archived"
-              archive.instantiate(record)
-            end 
-          }   
-        end 
-      end
+        def find_active_and_archived_by_sql(sql)
+          connection.select_all(sanitize_sql(sql), "#{name} Union Load").map do |record|
+            model = record["archive_table_type"] == 'archived' ? archive : self
+            model.instantiate(record)
+          end
+        end
     end
 
     def archive!
       transaction do
-        archived_instance = self.class.archive.new
-        attributes.keys.each do |name|
-          archived_instance[name] = read_attribute(name)
+        self.class.archive.new(attributes).tap do |archive|
+          raise "Unarchivable attributes" if archive.attributes != attributes
+
+          archive.save!(validate: false)
         end
-        raise "Unarchivable attributes" if archived_instance.attributes != attributes
-        archived_instance.save!(validate: false)
-        self.class.archive_associations.each do |assoc_name|
-          assoc = send(assoc_name)
-          if assoc && assoc.respond_to?(:archive!)
-            assoc.archive!
-          elsif assoc.is_a?(Array) || assoc.is_a?(ActiveRecord::Relation)
-            assoc.each do |a|
-              a.archive! if a.respond_to?(:archive!)
-            end
-          end
-        end
+
+        archive_associations!
         delete
       end
     end
 
+    private
+      def archive_associations!
+        Array(self.class.archive_associations).each do |assoc_name|
+          next unless association = send(assoc_name)
+
+          if association.respond_to?(:archive!)
+            association.archive!
+          elsif association.respond_to?(:each)
+            association.select { |a| a.respond_to?(:archive!) }.each(&:archive!)
+          end
+        end
+      end
   end
 end
 
-ActiveRecord::Base.send :include, Archiving::ArchiveTable
+ActiveRecord::Base.include Archiving::ArchiveTable

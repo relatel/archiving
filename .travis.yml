@@ -5,6 +5,7 @@ before_install:
   - "rm ${BUNDLE_GEMFILE}.lock"
 before_script:
   - bundle update
+  - mysql -e 'create database archiving_test'
 cache: bundler
 rvm:
   - 2.0

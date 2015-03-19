@@ -6,7 +6,11 @@ before_install:
 before_script:
   - bundle update
   - mysql -e 'create database archiving_test'
-  - cd test/dummy; export RAILS_ENV=test rake db:test:prepare; cd ../..
+script:
+  - cd test/dummy
+  - RAILS_ENV=test rake db:migrate
+  - cd ../..
+  - bundle exec rake
 cache: bundler
 rvm:
   - 2.0

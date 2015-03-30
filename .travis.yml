@@ -6,22 +6,24 @@ before_install:
 before_script:
   - bundle update
   - mysql -e 'create database archiving_test'
-script:
   - cd test/dummy
   - RAILS_ENV=test bundle exec rake db:migrate
   - cd ../..
-  - bundle exec rake test
 cache: bundler
 rvm:
   - 2.0
   - 2.1
+  - 2.2
 
 env:
   - "RAILS_VERSION=3.2.19"
+  - "RAILS_VERSION=4.0.13"
+  - "RAILS_VERSION=4.1.10"
+  - "RAILS_VERSION=4.2.1"
 
 matrix:
-  allow_failures:
-    - rvm: 2.2
+  exclude:
+    - { env: "RAILS_VERSION=3.2.19", rvm: 2.2 }
 
 notifications:
   email: false

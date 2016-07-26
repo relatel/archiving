@@ -28,9 +28,9 @@ class ArchiveTableTest < ActiveSupport::TestCase
   end
 
   test "with_archive applies lambda to query" do
-    p1 = Post.create!(title: "Post 1", tag: "news")
+    Post.create!(title: "Post 1", tag: "news")
     p2 = Post.create!(title: "Post 2", tag: "misc")
-    a1 = Post::Archive.create!(title: "Archive 1", tag: "news")
+    Post::Archive.create!(title: "Archive 1", tag: "news")
     a2 = Post::Archive.create!(title: "Archive 2", tag: "misc")
 
     set = Post.with_archive(lambda {|scoped|
@@ -41,10 +41,10 @@ class ArchiveTableTest < ActiveSupport::TestCase
   end
 
   test "with_archive takes :limit" do
-    p1 = Post.create!
-    p2 = Post.create!
-    a1 = Post::Archive.create!
-    a2 = Post::Archive.create!
+    Post.create!
+    Post.create!
+    Post::Archive.create!
+    Post::Archive.create!
 
     set = Post.with_archive(limit: 3)
 
@@ -52,10 +52,10 @@ class ArchiveTableTest < ActiveSupport::TestCase
   end
 
   test "with_archive takes :offset" do
-    p1 = Post.create!
-    p2 = Post.create!
-    a1 = Post::Archive.create!
-    a2 = Post::Archive.create!
+    Post.create!
+    Post.create!
+    Post::Archive.create!
+    Post::Archive.create!
 
     set = Post.with_archive(limit: 10, offset: 2)
 
@@ -74,8 +74,8 @@ class ArchiveTableTest < ActiveSupport::TestCase
   end
 
   test "with_archive takes lambda and options" do
-    p1 = Post.create!(title: "4", tag: "news")
-    p2 = Post.create!(title: "3", tag: "misc")
+    Post.create!(title: "4", tag: "news")
+    Post.create!(title: "3", tag: "misc")
     a1 = Post::Archive.create!(title: "2", tag: "misc")
     a2 = Post::Archive.create!(title: "1", tag: "misc")
 
@@ -132,8 +132,8 @@ class ArchiveTableTest < ActiveSupport::TestCase
   end
 
   test "archiving aged records with before callback" do
-    p1 = Post.create!(title: "Post 1", tag: "news")
-    p2 = Post.create!(title: "Post 2", tag: "misc")
+    Post.create!(title: "Post 1", tag: "news")
+    Post.create!(title: "Post 2", tag: "misc")
     before_called = false
 
     Post.archive_aged_records(where: "tag = 'news'", before_callback: lambda {

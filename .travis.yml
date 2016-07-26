@@ -12,18 +12,23 @@ before_script:
 cache: bundler
 rvm:
   - 2.0
-  - 2.1
-  - 2.2
+  - 2.1.6
+  - 2.2.5
+  - 2.3.1
 
-env:
-  - "RAILS_VERSION=3.2.19"
-  - "RAILS_VERSION=4.0.13"
-  - "RAILS_VERSION=4.1.10"
-  - "RAILS_VERSION=4.2.1"
+gemfile:
+  - gemfiles/active_record-3.2.gemfile
+  - gemfiles/active_record-4.0.gemfile
+  - gemfiles/active_record-4.1.gemfile
+  - gemfiles/active_record-4.2.gemfile
 
 matrix:
+  fast_finish: true
   exclude:
-    - { env: "RAILS_VERSION=3.2.19", rvm: 2.2 }
+    - rvm: 2.2.5
+      gemfile: gemfiles/active_record-3.2.gemfile
+    - rvm: 2.3.1
+      gemfile: gemfiles/active_record-3.2.gemfile
 
 notifications:
   email: false

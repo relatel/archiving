@@ -6,6 +6,8 @@ require "rails/test_help"
 
 Rails.backtrace_cleaner.remove_silencers!
 
+ActiveSupport.test_order = :random if ActiveSupport.respond_to?(:test_order=)
+
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 

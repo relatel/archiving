@@ -18,4 +18,10 @@ Gem::Specification.new do |s|
 
   s.add_dependency "activerecord", ">= 3.2", "< 5.0"
   s.add_dependency "mysql2"
+
+  s.add_development_dependency "rails", ">= 3.2", "< 5.0"
+  s.add_development_dependency "jquery-rails"
+  s.add_development_dependency "rake"
+  s.add_development_dependency "pry", "0.9.10"
+  s.add_development_dependency "pry-nav", "0.2.2"
 end

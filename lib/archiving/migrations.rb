@@ -14,5 +14,3 @@ module Archiving
     end
   end
 end
-
-ActiveRecord::ConnectionAdapters::SchemaStatements.send :include, Archiving::Migrations

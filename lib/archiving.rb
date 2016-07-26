@@ -1,5 +1,3 @@
 require "archiving/archive_table"
 require "archiving/migrations"
-
-module Archiving
-end
+require "archiving/railtie" if defined?(Rails.application)

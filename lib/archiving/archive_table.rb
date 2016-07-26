@@ -106,5 +106,3 @@ module Archiving
       end
   end
 end
-
-ActiveRecord::Base.send :include, Archiving::ArchiveTable

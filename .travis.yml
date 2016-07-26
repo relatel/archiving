@@ -2,7 +2,7 @@ language: ruby
 sudo: false
 before_install:
   - gem install bundler
-  - "rm ${BUNDLE_GEMFILE}.lock"
+  - "rm -f ${BUNDLE_GEMFILE}.lock"
 before_script:
   - bundle update
   - mysql -e 'create database archiving_test'

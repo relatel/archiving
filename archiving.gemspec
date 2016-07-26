@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = "MySQL Archive Tables"
   s.description = "Archiving aged records to archive table"
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "activerecord", ">= 4.2", "< 6.0"

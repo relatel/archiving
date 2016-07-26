@@ -21,8 +21,8 @@ class MigrationTest < ActiveSupport::TestCase
   end
 
   def drop_tables
-    connection.drop_table(:comments) if connection.table_exists?(:comments)
-    connection.drop_table(:comments_archive) if connection.table_exists?(:comments_archive)
+    connection.drop_table(:comments) if table_exists?(:comments)
+    connection.drop_table(:comments_archive) if table_exists?(:comments_archive)
   end
 
   setup do
@@ -36,7 +36,7 @@ class MigrationTest < ActiveSupport::TestCase
   test "create_archive_table" do
     CreateComments.new.up
 
-    assert connection.table_exists?(:comments_archive),
+    assert table_exists?(:comments_archive),
       "Expected table 'comments_archive' to exist."
 
     assert_equal Comment.attribute_names, Comment.archive.attribute_names
@@ -47,4 +47,12 @@ class MigrationTest < ActiveSupport::TestCase
     CreateComments.new.create_archive_table :comments # we can re-run archive table creator without errors
   end
 
+  private
+    def table_exists?(table_name)
+      if connection.respond_to?(:data_source_exists?)
+        connection.data_source_exists?(table_name)
+      else
+        connection.table_exists?(table_name)
+      end
+    end
 end

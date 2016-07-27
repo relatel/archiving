@@ -1,12 +1,9 @@
 $:.push File.expand_path("../lib", __FILE__)
 
-# Maintain your gem's version:
-require "archiving/version"
-
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = "archiving"
-  s.version     = Archiving::VERSION
+  s.version     = "0.2.1"
   s.authors     = ["Harry Vangberg", "Michael Kyed"]
   s.email       = ["teknik@firmafon.dk"]
   s.homepage    = "https://github.com/firmafon/archiving"

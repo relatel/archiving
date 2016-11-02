@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rails", ">= 4.2", "< 6.0"
   s.add_development_dependency "jquery-rails"
   s.add_development_dependency "rake"
-  s.add_development_dependency "pry", "0.9.10"
-  s.add_development_dependency "pry-nav", "0.2.2"
+  s.add_development_dependency 'rr'
+  s.add_development_dependency 'minitest-focus'
+
 end

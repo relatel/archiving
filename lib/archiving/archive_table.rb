@@ -79,30 +79,62 @@ module Archiving
     end
 
     def archive!
-      transaction do
+      if archive_with_transaction?
+        transaction do
+          archive_me!
+        end
+      else
+        archive_me!
+      end
+    end
+
+    private
+      def archive_me!
         self.class.archive.new.tap do |archive|
           attributes.each { |k, v| archive[k] = v }
           raise "Unarchivable attributes" if archive.attributes != attributes
-
           archive.save!(validate: false)
         end
 
         archive_associations!
         delete
       end
-    end
 
-    private
       def archive_associations!
         Array(self.class.archive_associations).each do |assoc_name|
           next unless association = send(assoc_name)
-
           if association.respond_to?(:archive!)
-            association.archive!
+            association.send(:archive_me!)
           elsif association.respond_to?(:each)
-            association.select { |a| a.respond_to?(:archive!) }.each(&:archive!)
+            association.each do |assoc|
+              assoc.respond_to?(:archive!) && assoc.send(:archive_me!)
+            end
           end
         end
+      end
+
+      def archive_with_transaction?
+        archive_connection_configs.size == 1
+      end
+
+      def archive_connection_configs
+        configs = Set.new
+        configs << self.class.connection_config
+        if respond_to?(:archive!)
+          Array(self.class.archive_associations).each do |assoc_name|
+            next unless association = send(assoc_name)
+            if association.respond_to?(:archive!)
+              configs.merge association.send(:archive_connection_configs)
+            elsif association.respond_to?(:each)
+              association.each do |assoc|
+                if assoc.respond_to?(:archive!)
+                  configs.merge assoc.send(:archive_connection_configs)
+                end
+              end
+            end
+          end
+        end
+        configs
       end
   end
 end

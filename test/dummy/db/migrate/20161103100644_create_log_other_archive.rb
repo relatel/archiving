@@ -18,6 +18,7 @@ class CreateLogOtherArchive < ActiveRecord::Migration
     connection_was = @connection
     @connection = ActiveRecord::Base.establish_connection(:"other_#{Rails.env}").connection
     yield
+  ensure
     @connection = connection_was
     ActiveRecord::Base.remove_connection
     ActiveRecord::Base.establish_connection

@@ -192,4 +192,15 @@ class ArchiveTableTest < ActiveSupport::TestCase
     end
   end
 
+  test "overriding database connection for archive" do
+    assert_not_equal LogOther.connection_config, LogOther.archive.connection_config
+    p1 = Post.create!(title: "Post 1", tag: "news")
+    l1 = LogOther.create!(note: "Oh", post: p1)
+    l1.archive!
+    assert_nil Post.find_by_id p1.id
+    assert Post.archive.find_by_id p1.id
+    assert_nil LogOther.find_by_id l1.id
+    assert LogOther.archive.find_by_id l1.id
+  end
+
 end

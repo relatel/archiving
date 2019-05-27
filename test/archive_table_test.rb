@@ -93,6 +93,7 @@ class ArchiveTableTest < ActiveSupport::TestCase
   test "new archive records can be persisted" do
     assert_nothing_raised do
       Post::Archive.create!
+      Postrw::Archive.create!
     end
   end
 
@@ -103,6 +104,14 @@ class ArchiveTableTest < ActiveSupport::TestCase
     assert_raises(ActiveRecord::ReadOnlyRecord) do
       archive.update_attribute(:title, "New post")
     end
+
+    # unless they are not
+    archive = Postrw::Archive.create!
+    archive = Postrw::Archive.find(archive.id)
+
+    assert_nothing_raised do
+      archive.update_attribute(:title, "New post")
+    end
   end
 
   test "existing archive records fetched with with_archive are read only" do
@@ -111,6 +120,16 @@ class ArchiveTableTest < ActiveSupport::TestCase
     archive = Post.with_archive.first
 
     assert_raises(ActiveRecord::ReadOnlyRecord) do
+      archive.title = "New post"
+      archive.save!
+    end
+
+    # unless they are not
+    Postrw::Archive.create!
+
+    archive = Postrw.with_archive.first
+
+    assert_nothing_raised do
       archive.title = "New post"
       archive.save!
     end

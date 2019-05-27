@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,56 +10,70 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161103110724) do
+ActiveRecord::Schema.define(version: 2019_07_11_112558) do
 
-  create_table "log_days", force: :cascade do |t|
-    t.integer "post_id",       limit: 4
-    t.date    "day"
-    t.string  "postable_type", limit: 255
-    t.integer "postable_id",   limit: 4
+  create_table "log_days", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci", force: :cascade do |t|
+    t.integer "post_id"
+    t.date "day"
+    t.string "postable_type"
+    t.integer "postable_id"
   end
 
-  create_table "log_days_archive", force: :cascade do |t|
-    t.integer "post_id",       limit: 4
-    t.date    "day"
-    t.string  "postable_type", limit: 255
-    t.integer "postable_id",   limit: 4
+  create_table "log_days_archive", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci", force: :cascade do |t|
+    t.integer "post_id"
+    t.date "day"
+    t.string "postable_type"
+    t.integer "postable_id"
   end
 
-  create_table "log_lines", force: :cascade do |t|
-    t.integer "log_day_id", limit: 4
-    t.string  "descr",      limit: 255
+  create_table "log_lines", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci", force: :cascade do |t|
+    t.integer "log_day_id"
+    t.string "descr"
   end
 
-  create_table "log_lines_archive", force: :cascade do |t|
-    t.integer "log_day_id", limit: 4
-    t.string  "descr",      limit: 255
+  create_table "log_lines_archive", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci", force: :cascade do |t|
+    t.integer "log_day_id"
+    t.string "descr"
   end
 
-  create_table "log_others", force: :cascade do |t|
-    t.integer "post_id", limit: 4
-    t.string  "note",    limit: 255
+  create_table "log_others", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci", force: :cascade do |t|
+    t.integer "post_id"
+    t.string "note"
   end
 
-  create_table "log_others_archive", force: :cascade do |t|
-    t.integer "post_id", limit: 4
-    t.string  "note",    limit: 255
+  create_table "log_others_archive", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci", force: :cascade do |t|
+    t.integer "post_id"
+    t.string "note"
   end
 
-  create_table "posts", force: :cascade do |t|
-    t.string   "title",      limit: 255
-    t.text     "body",       limit: 65535
+  create_table "postrws", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "title"
+    t.text "body"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "tag",        limit: 255
   end
 
-  create_table "posts_archive", force: :cascade do |t|
-    t.string   "title",      limit: 255
-    t.text     "body",       limit: 65535
+  create_table "postrws_archive", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "title"
+    t.text "body"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "tag",        limit: 255
+  end
+
+  create_table "posts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci", force: :cascade do |t|
+    t.string "title"
+    t.text "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string "tag"
+  end
+
+  create_table "posts_archive", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci", force: :cascade do |t|
+    t.string "title"
+    t.text "body"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string "tag"
   end
 
 end

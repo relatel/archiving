@@ -8,11 +8,13 @@ module Archiving
     module ClassMethods
       attr_accessor :archive_table
 
-      def has_archive_table(connection: nil)
+      def has_archive_table(connection: nil, read_only: true)
         model = name.constantize
         @archive_model = model.const_set("Archive", Class.new(model))
-        @archive_model.after_initialize do |record|
-          record.readonly! unless record.new_record?
+        if read_only
+          @archive_model.after_initialize do |record|
+            record.readonly! unless record.new_record?
+          end
         end
         @archive_model.table_name = "#{table_name}_archive"
         if connection

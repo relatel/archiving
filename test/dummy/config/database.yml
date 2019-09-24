@@ -25,14 +25,14 @@ test:
   host: localhost
   database: archiving_test
   username: root
-  password:
+  password: a
 
 other_test:
   adapter: mysql2
   host: 127.0.0.1
   database: archiving_test
   username: root
-  password:
+  password: a
 
 production:
   adapter: mysql2

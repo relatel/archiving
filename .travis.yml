@@ -18,12 +18,13 @@ rvm:
 gemfile:
   - gemfiles/active_record-4.2.gemfile
   - gemfiles/active_record-5.0.gemfile
+  - gemfiles/active_record-6.0.gemfile
 
 matrix:
   fast_finish: true
   exclude:
     - rvm: 2.1.6
-      gemfile: gemfiles/active_record-5.0.gemfile
+      gemfile: gemfiles/active_record-6.0.gemfile
 
 notifications:
   email: false

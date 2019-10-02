@@ -1,14 +1,21 @@
 language: ruby
 sudo: false
+
 before_install:
   - "rm -f ${BUNDLE_GEMFILE}.lock"
+
+services:
+  - mysql
+
 before_script:
   - bundle update
   - mysql -e 'create database archiving_test'
   - cd test/dummy
   - RAILS_ENV=test bundle exec rake db:migrate
   - cd ../..
+
 cache: bundler
+
 rvm:
   - 2.1.6
   - 2.2.5

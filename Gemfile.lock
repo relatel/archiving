@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    archiving (0.3.1)
+    archiving (0.4.0)
       activerecord (>= 4.2, < 7.0)
       mysql2
 

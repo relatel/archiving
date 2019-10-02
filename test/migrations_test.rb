@@ -4,7 +4,7 @@ class Comment < ActiveRecord::Base
   has_archive_table
 end
 
-class CreateComments < ActiveRecord::Migration[4.2]
+class CreateComments < ActiveRecord::Migration
   def up
     create_table :comments do |t|
       t.string :author

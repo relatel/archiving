@@ -1,4 +1,4 @@
-class CreatePostrws < ActiveRecord::Migration[4.2]
+class CreatePostrws < ActiveRecord::Migration
   def change
     create_table :postrws do |t|
       t.string :title

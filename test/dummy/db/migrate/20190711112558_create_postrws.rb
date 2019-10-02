@@ -1,4 +1,11 @@
-class CreatePostrws < ActiveRecord::Migration
+migration_class =
+  if ActiveRecord::VERSION::MAJOR >= 5
+    ActiveRecord::Migration[4.2]
+  else
+    ActiveRecord::Migration
+  end
+
+class CreatePostrws < migration_class
   def change
     create_table :postrws do |t|
       t.string :title

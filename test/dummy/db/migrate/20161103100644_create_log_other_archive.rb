@@ -1,3 +1,9 @@
+class OtherConnection < ActiveRecord::Base
+  self.abstract_class = true
+
+  establish_connection :"other_#{Rails.env}"
+end
+
 migration_class =
   if ActiveRecord::VERSION::MAJOR >= 5
     ActiveRecord::Migration[4.2]
@@ -23,11 +29,10 @@ class CreateLogOtherArchive < migration_class
 
   def set_connection
     connection_was = @connection
-    @connection = ActiveRecord::Base.establish_connection(:"other_#{Rails.env}").connection
+    @connection = OtherConnection.connection
     yield
   ensure
     @connection = connection_was
-    ActiveRecord::Base.remove_connection
-    ActiveRecord::Base.establish_connection
+    OtherConnection.remove_connection
   end
 end

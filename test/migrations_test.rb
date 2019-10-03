@@ -4,7 +4,14 @@ class Comment < ActiveRecord::Base
   has_archive_table
 end
 
-class CreateComments < ActiveRecord::Migration
+migration_class =
+  if ActiveRecord::VERSION::MAJOR >= 5
+    ActiveRecord::Migration[4.2]
+  else
+    ActiveRecord::Migration
+  end
+
+class CreateComments < migration_class
   def up
     create_table :comments do |t|
       t.string :author

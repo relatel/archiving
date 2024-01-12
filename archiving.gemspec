@@ -13,10 +13,10 @@ Gem::Specification.new do |s|
   s.files = Dir["lib/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "activerecord", ">= 4.2", "< 7.0"
+  s.add_dependency "activerecord", ">= 4.2", "< 8.0"
   s.add_dependency "mysql2"
 
-  s.add_development_dependency "rails", ">= 4.2", "< 7.0"
+  s.add_development_dependency "rails", ">= 4.2", "< 8.0"
   s.add_development_dependency "rake"
   s.add_development_dependency "rr"
   s.add_development_dependency "minitest-focus"

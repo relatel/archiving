@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@master
-    - name: Set up Ruby 2.6
+    - uses: actions/checkout@v4
+    - name: Set up Ruby
       uses: actions/setup-ruby@v1
       with:
-        version: 2.6.x
+        version: 3.4
 
     - name: Publish to RubyGems
       run: |

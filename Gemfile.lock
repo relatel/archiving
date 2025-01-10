@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     archiving (0.4.4)
-      activerecord (>= 4.2, < 8.0)
+      activerecord (>= 4.2, <= 8.1)
       mysql2
 
 GEM
@@ -167,7 +167,7 @@ GEM
       rake (>= 12.2)
       thor (~> 1.0, >= 1.2.2)
       zeitwerk (~> 2.6)
-    rake (13.1.0)
+    rake (13.2.1)
     rdoc (6.6.3.1)
       psych (>= 4.0.0)
     reline (0.4.2)
@@ -193,7 +193,7 @@ PLATFORMS
 DEPENDENCIES
   archiving!
   minitest-focus
-  rails (>= 4.2, < 8.0)
+  rails (>= 4.2, <= 8.1)
   rake
   rr
 

@@ -1,9 +1,8 @@
 PATH
   remote: .
   specs:
-    archiving (0.4.4)
+    archiving (0.6.0)
       activerecord (>= 4.2, <= 8.1)
-      mysql2
 
 GEM
   remote: https://rubygems.org/
@@ -112,7 +111,7 @@ GEM
     minitest (5.25.4)
     minitest-focus (1.4.0)
       minitest (>= 4, < 6)
-    mysql2 (0.5.6)
+    mysql2 (0.5.5)
     net-imap (0.4.9.1)
       date
       net-protocol
@@ -192,6 +191,7 @@ PLATFORMS
 DEPENDENCIES
   archiving!
   minitest-focus
+  mysql2
   rails (>= 4.2, <= 8.1)
   rake
   rr

@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     archiving (0.6.1)
-      activerecord (>= 4.2, <= 8.1)
+      activerecord (>= 4.2, <= 8.2)
 
 GEM
   remote: https://rubygems.org/
@@ -113,8 +113,6 @@ GEM
     minitest (5.25.5)
     minitest-focus (1.4.0)
       minitest (>= 4, < 6)
-    mysql2 (0.5.7)
-      bigdecimal
     net-imap (0.5.9)
       date
       net-protocol
@@ -184,6 +182,7 @@ GEM
     stringio (3.1.7)
     thor (1.4.0)
     timeout (0.4.3)
+    trilogy (2.9.0)
     tsort (0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -201,10 +200,10 @@ PLATFORMS
 DEPENDENCIES
   archiving!
   minitest-focus
-  mysql2
-  rails (>= 4.2, <= 8.1)
+  rails (>= 4.2, <= 8.2)
   rake
   rr
+  trilogy
 
 BUNDLED WITH
    2.6.2

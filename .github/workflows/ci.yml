@@ -19,9 +19,12 @@ jobs:
           - active_record-7.1
           - active_record-7.2
           - active_record-8.0
+          - active_record-8.1
         exclude:
           - ruby_version: '3.1'
             gemfile: active_record-8.0
+          - ruby_version: '3.1'
+            gemfile: active_record-8.1
 
     name: "${{ matrix.gemfile }} on Ruby ${{ matrix.ruby_version }}"
 

@@ -1,6 +1,14 @@
 source 'https://rubygems.org'
 
+<<<<<<<< HEAD:gemfiles/active_record-8.1.gemfile
 gem 'activerecord', '~> 8.1.0'
 gem 'trilogy'
+|||||||| 7154bcc:gemfiles/active_record-7.1.gemfile
+gem 'activerecord', '~> 7.1.0'
+gem 'mysql2'
+========
+gem 'activerecord', '~> 7.1.0'
+gem 'trilogy'
+>>>>>>>> origin/master:gemfiles/active_record-7.1.gemfile
 
 gemspec path: '../'

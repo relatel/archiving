@@ -187,7 +187,8 @@ GEM
     stringio (3.2.0)
     thor (1.4.0)
     timeout (0.6.0)
-    trilogy (2.9.0)
+    trilogy (2.10.0)
+      bigdecimal
     tsort (0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
